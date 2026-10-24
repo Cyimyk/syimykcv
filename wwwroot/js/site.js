@@ -6,11 +6,11 @@ window.siteInterop = {
                     entry.target.classList.add('visible');
                 }
             });
-        }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+        }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
 
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // remove initial loader once Blazor has rendered
+        // Скрыть начальный лоадер после рендера Blazor
         const loader = document.querySelector('.initial-loader');
         if (loader) {
             loader.style.opacity = '0';
@@ -22,6 +22,25 @@ window.siteInterop = {
         const el = document.getElementById(id);
         if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    },
+
+    copyToClipboard: async function (text) {
+        try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+                return true;
+            } else {
+                const textarea = document.createElement('textarea');
+                textarea.value = text;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                return true;
+            }
+        } catch (err) {
+            return false;
         }
     }
 };
